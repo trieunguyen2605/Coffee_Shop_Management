@@ -72,6 +72,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    public UserResponse updateUser(Long id, com.coffeeshop.app.modules.user.dto.UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân viên với ID: " + id));
+
+        user.setFullName(request.getFullName());
+        user.setRole(request.getRole());
+
+        User updatedUser = userRepository.save(user);
+        return modelMapper.map(updatedUser, UserResponse.class);
+    }
+
+    @Override
+    @Transactional
     public void changePassword(Long userId, ChangePasswordRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy nhân viên với ID: " + userId));

@@ -56,8 +56,18 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(message, response));
     }
 
-    @PutMapping("/change-password")
+    @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody com.coffeeshop.app.modules.user.dto.UpdateUserRequest request) {
+        
+        UserResponse response = userService.updateUser(id, request);
+        return ResponseEntity.ok(ApiResponse.success("Cập nhật thông tin người dùng thành công", response));
+    }
+
+    @PutMapping("/change-password")
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public ResponseEntity<ApiResponse<Void>> changePassword(
             @AuthenticationPrincipal CustomUserDetails currentUser,
             @Valid @RequestBody ChangePasswordRequest request) {

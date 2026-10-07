@@ -16,5 +16,7 @@ public interface UserService {
 
     UserResponse updateUserStatus(Long id, boolean status);
 
+    UserResponse updateUser(Long id, com.coffeeshop.app.modules.user.dto.UpdateUserRequest request);
+
     void changePassword(Long userId, ChangePasswordRequest request);
 }
