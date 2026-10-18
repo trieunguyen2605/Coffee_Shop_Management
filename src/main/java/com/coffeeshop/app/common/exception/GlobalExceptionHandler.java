@@ -51,12 +51,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
+    // 5. Handle Endpoint Not Found (Spring Boot 3.2+ NoResourceFoundException)
+    @ExceptionHandler(org.springframework.web.servlet.resource.NoResourceFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNoResourceFoundException(org.springframework.web.servlet.resource.NoResourceFoundException ex) {
+        ApiResponse<Void> response = ApiResponse.error(HttpStatus.NOT_FOUND.value(), "Endpoint không tồn tại: " + ex.getResourcePath());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
     // 5. Handle unexpected generic exceptions (fallback)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleGlobalException(Exception ex) {
-        // Print the stack trace or log it for debugging (using a logger is preferred in production)
         ex.printStackTrace();
-        
         ApiResponse<Void> response = ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected error occurred. Please try again later.");
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
