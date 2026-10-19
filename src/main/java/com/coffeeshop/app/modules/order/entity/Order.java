@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,11 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private BigDecimal finalAmount = BigDecimal.ZERO;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
+
+    private LocalDateTime paidAt; 
 
     private String note;
 

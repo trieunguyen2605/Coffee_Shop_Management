@@ -2,6 +2,7 @@ package com.coffeeshop.app.modules.order.controller;
 
 import com.coffeeshop.app.common.response.ApiResponse;
 import com.coffeeshop.app.modules.order.dto.*;
+import com.coffeeshop.app.modules.order.service.CheckoutService;
 import com.coffeeshop.app.modules.order.service.OrderService;
 import com.coffeeshop.app.security.CustomUserDetails;
 import jakarta.validation.Valid;
@@ -21,6 +22,7 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final CheckoutService checkoutService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
@@ -63,5 +65,14 @@ public class OrderController {
             @Valid @RequestBody MergeTableRequest request) {
         OrderResponse response = orderService.mergeTable(request);
         return ResponseEntity.ok(ApiResponse.success("Gộp bàn thành công", response));
+    }
+
+    @PostMapping("/{orderId}/checkout")
+    public ResponseEntity<ApiResponse<BillResponse>> checkoutOrder(
+            @PathVariable Long orderId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @Valid @RequestBody CheckoutRequest request) {
+        BillResponse response = checkoutService.checkoutOrder(orderId, userDetails.getId(), request);
+        return ResponseEntity.ok(ApiResponse.success("Thanh toán đơn hàng thành công", response));
     }
 }
